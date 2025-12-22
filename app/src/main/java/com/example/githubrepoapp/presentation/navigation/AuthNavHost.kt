@@ -25,14 +25,14 @@ fun AuthNavHost(
         composable<LoginRoute> {
             LoginScreen(
                 onLoginSuccess = onAuthSuccess,
-                onNavigateToSignUp = { navController.navigate(SignUpRoute)}
+                onNavigateToSignUp = { navController.navigate(SignUpRoute) }
             )
         }
 
-        composable<SignUpRoute> { backStackEntry ->
-            val signUpRoute = backStackEntry.toRoute<LoginRoute>()
+        composable<SignUpRoute> {
             SignUpScreen(
                 onSignUpSuccess = onAuthSuccess,
+                onNavigateToLogIn = { navController.navigate(LoginRoute) }
             )
         }
     }

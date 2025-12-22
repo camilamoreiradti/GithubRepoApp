@@ -14,22 +14,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.githubrepoapp.presentation.navigation.AuthNavHost
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
-class LoginActivity : ComponentActivity() {
+class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
-            Box(
-                modifier = Modifier
-                    .safeDrawingPadding()
-            ) {
-                GithubRepoAppTheme {
+            GithubRepoAppTheme {
+                Box(
+                    modifier = Modifier
+                        .safeDrawingPadding()
+                ) {
                     AuthNavHost(
                         onAuthSuccess = {
-
                             // Intent: intenção de navegar da Activity atual (this) para a MainActivity
                             // startActivity: executa a intenção e inicia a nova activity
-                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            startActivity(Intent(this@AuthActivity, MainActivity::class.java))
 
                             // Destrói AuthActivity atual, cria fluxo de navegação SEM VOLTA
                             finish()
@@ -41,14 +40,9 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
-fun navigateToMainActivity() {
-
-}
-
-
 @Preview(showBackground = true)
 @Composable
-fun LoginPreview() {
+fun AuthPreview() {
     GithubRepoAppTheme {
     }
 }
