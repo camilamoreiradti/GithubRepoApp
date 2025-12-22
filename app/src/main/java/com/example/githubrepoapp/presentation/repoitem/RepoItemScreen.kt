@@ -1,15 +1,15 @@
-package com.example.githubrepoapp.presentation.repodetail
+package com.example.githubrepoapp.presentation.repoitem
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun RepoDetailScreen(
+fun RepoItemScreen(
     id: Long,
     navigateBack: () -> Unit
 ) {
 
 }
 
-fun RepoDetailContent() {
+fun RepoItemContent() {
 
 }

@@ -41,6 +41,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.githubrepoapp.presentation.components.AuthButton
+import com.example.githubrepoapp.presentation.components.AuthFormFields
+import com.example.githubrepoapp.presentation.components.SecureOutlinedTextField
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
@@ -50,40 +53,6 @@ fun LoginScreen(
 ) {
     LoginContent(onLoginSuccess, onNavigateToSignUp)
 }
-
-@Composable
-fun SecureOutlinedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    // função que implemente a interface KeyboardActionScope
-    onDone: KeyboardActionScope.() -> Unit,
-    placeholder: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
-    imeAction: ImeAction = ImeAction.Done,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null,
-    shape: Shape = OutlinedTextFieldDefaults.shape,
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = placeholder,
-        maxLines = 1,
-        modifier = modifier,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = imeAction,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = onDone,
-        ),
-        visualTransformation = PasswordVisualTransformation(),
-        isError = isError,
-        supportingText = supportingText,
-        shape = shape,
-    )
-}
-
 
 @Composable
 fun LoginContent(
@@ -101,6 +70,7 @@ fun LoginContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -113,44 +83,22 @@ fun LoginContent(
 
             Spacer(Modifier.height(50.dp))
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = emailText,
-                onValueChange = { newValue -> emailText = newValue },
-                placeholder = { Text(text = "Email") },
-                maxLines = 1,
-                shape = CircleShape,
-                keyboardOptions = KeyboardOptions(
-                    // teclado facilitado para email (@, .com)
-                    keyboardType = KeyboardType.Email,
-
-                    // botão de ação ("enter") se torna um next
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    // vai para próximo campo abaixo
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                )
+            AuthFormFields(
+                email = emailText,
+                onEmailChange = { emailText = it },
+                password = passwordText,
+                onPasswordChange = { passwordText = it },
+                onSubmit = { onLoginSuccess() }
             )
 
             Spacer(Modifier.height(12.dp))
 
-            SecureOutlinedTextField(
-                value = passwordText,
-                onValueChange = { newValue -> passwordText = newValue },
-                placeholder = { Text("Password") },
-                modifier = Modifier.fillMaxWidth(),
-                shape = CircleShape,
-                // imeAction Done executa login
-                onDone = { }
-            )
-
-            Spacer(Modifier.height(12.dp))
-
-            LoginButton(
-                emailText = emailText,
-                passwordText = passwordText
+            AuthButton(
+                text = "Log In",
+                email = emailText,
+                password = passwordText,
+                enabled = emailText.isNotBlank() && passwordText.isNotBlank(),
+                onClick = { onLoginSuccess() }
             )
 
             Spacer(Modifier.height(12.dp))
@@ -160,7 +108,7 @@ fun LoginContent(
                     append("Don't have an account? ")
                     withLink(
                         LinkAnnotation.Clickable(
-                            tag= "signup",
+                            tag = "signup",
                             styles = TextLinkStyles(
                                 style = SpanStyle(
                                     color = MaterialTheme.colorScheme.primary,
@@ -193,26 +141,6 @@ fun LoginContent(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun LoginButton(emailText: String, passwordText: String) {
-    // Validação do form para habilitar botão
-    val isFormValid = emailText.isNotBlank() &&
-            passwordText.isNotBlank()
-
-    Button(
-        enabled = isFormValid,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-        onClick = { },
-    ) {
-        Text(
-            style = MaterialTheme.typography.titleMedium,
-            text = "Log In"
-        )
     }
 }
 
