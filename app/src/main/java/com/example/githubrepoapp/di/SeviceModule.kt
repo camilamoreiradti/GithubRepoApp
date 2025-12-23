@@ -2,18 +2,25 @@ package com.example.githubrepoapp.di
 
 import android.content.Context
 import com.example.githubrepoapp.BuildConfig
-import com.example.githubrepoapp.data.remote.api.GithubAPI
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+// Service (ou Network) Module: reponsável por configurar as dependências de classes da camada Service/Network
+@Module
+@InstallIn(SingletonComponent::class)
 class ServiceModule {
 
-    fun providesOkhttpClient(
-        context: Context
-    ): OkHttpClient {
+    // @Provides é usado para implementações de classes que não são suas (biblioteca externa hilt, retrofit, room etc)
+    // ou se as intâncias precisão ser criandas com padrão build
+    @Provides
+    fun providesOkhttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             // tempo que ele pode levar para se conectar com a API
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -32,6 +39,7 @@ class ServiceModule {
             .build()
     }
 
+    @Provides
     fun providesRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit {
@@ -43,10 +51,5 @@ class ServiceModule {
             .build()
     }
 
-    // configuração da interface service API
-    fun providesGithubRepoAPI(
-        retrofit: Retrofit
-    ): GithubAPI {
-        return retrofit.create(GithubAPI::class.java)
-    }
+
 }

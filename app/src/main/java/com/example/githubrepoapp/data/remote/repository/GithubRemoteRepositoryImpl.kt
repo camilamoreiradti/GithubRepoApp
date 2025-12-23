@@ -4,8 +4,9 @@ import com.example.githubrepoapp.data.remote.api.GithubAPI
 import com.example.githubrepoapp.data.remote.model.RepoItemResponse
 import com.example.githubrepoapp.data.remote.model.RepoListResponse
 import com.example.githubrepoapp.domain.remote.repository.GithubRemoteRepository
+import javax.inject.Inject
 
-class GithubRemoteRepositoryImpl(
+class GithubRemoteRepositoryImpl @Inject constructor(
     private val githubAPI: GithubAPI
 ) : GithubRemoteRepository {
     override suspend fun getRepoItem(

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
     kotlin("plugin.serialization") version libs.versions.kotlin
 }
 
@@ -72,5 +73,9 @@ dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.logging.interceptor)
 
+    // Dagger Hilt
+    ksp (libs.hilt.android.compiler)
+    implementation (libs.hilt.android)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
 }
