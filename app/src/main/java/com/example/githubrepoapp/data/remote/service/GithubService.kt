@@ -1,11 +1,11 @@
-package com.example.githubrepoapp.data.remote.api
+package com.example.githubrepoapp.data.remote.service
 
 import com.example.githubrepoapp.data.remote.model.RepoItemResponse
-import com.example.githubrepoapp.data.remote.model.RepoListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
-interface GithubAPI {
+interface GithubService {
 
     @GET("repos/{owner}/{repo}")
     suspend fun getRepoItem(
@@ -14,5 +14,7 @@ interface GithubAPI {
     ) : RepoItemResponse
 
     @GET("repositories")
-    suspend fun getRepoList() : RepoListResponse
+    suspend fun getRepoList(
+        @Query("per_page") perPage: Int = 15
+    ) : List<RepoItemResponse>
 }
