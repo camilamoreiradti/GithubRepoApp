@@ -8,6 +8,7 @@ fun RepoItemResponse.toDomain(): RepoItem {
         description = description,
         id = id,
         name = name,
-        owner = owner?.toDomain(),
+        fullName = fullName,
+        owner = owner.toDomain(),
     )
 }
