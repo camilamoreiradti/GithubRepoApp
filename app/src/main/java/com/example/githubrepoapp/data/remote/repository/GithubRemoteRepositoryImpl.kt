@@ -1,25 +1,26 @@
 package com.example.githubrepoapp.data.remote.repository
 
-import com.example.githubrepoapp.data.remote.api.GithubAPI
-import com.example.githubrepoapp.data.remote.model.RepoItemResponse
-import com.example.githubrepoapp.data.remote.model.RepoListResponse
+import com.example.githubrepoapp.data.remote.service.GithubService
+import com.example.githubrepoapp.data.remote.mapper.fromDTOList
+import com.example.githubrepoapp.data.remote.mapper.toDomain
+import com.example.githubrepoapp.domain.remote.model.RepoItem
 import com.example.githubrepoapp.domain.remote.repository.GithubRemoteRepository
 import javax.inject.Inject
 
 class GithubRemoteRepositoryImpl @Inject constructor(
-    private val githubAPI: GithubAPI
+    private val githubService: GithubService
 ) : GithubRemoteRepository {
     override suspend fun getRepoItem(
         ownerName: String,
         repoName: String
-    ): RepoItemResponse {
-        return githubAPI.getRepoItem(
+    ): RepoItem {
+        return githubService.getRepoItem(
             owner = ownerName,
             repo = repoName
-        )
+        ).toDomain()
     }
 
-    override suspend fun getRepoList(): RepoListResponse {
-        return githubAPI.getRepoList()
+    override suspend fun getRepoList(): List<RepoItem> {
+        return fromDTOList(githubService.getRepoList())
     }
 }

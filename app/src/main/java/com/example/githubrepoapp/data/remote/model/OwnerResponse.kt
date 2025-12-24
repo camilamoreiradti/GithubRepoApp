@@ -1,9 +1,10 @@
 package com.example.githubrepoapp.data.remote.model
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OwnerResponse(
-    val id: Int,
 
     @SerializedName("login")
     val name: String,

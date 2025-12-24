@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 object ListRoute
 
 @Serializable
-data class RepoItemRoute(val id: Long)
+data class RepoItemRoute(val name: String?)
 
 @Composable
 fun MainNavHost() {
@@ -22,8 +22,8 @@ fun MainNavHost() {
     NavHost(navController = navController, startDestination = ListRoute) {
         composable<ListRoute> {
             RepoListScreen(
-                onNavigateToRepoItem = { id ->
-                    navController.navigate(RepoItemRoute(id = id))
+                onNavigateToRepoItem = { name ->
+                    navController.navigate(RepoItemRoute(name = name))
                 }
             )
         }
@@ -33,7 +33,7 @@ fun MainNavHost() {
                 // Converte argumentos da URL de volta para objeto tipado
             val repoItemRoute = backStackEntry.toRoute<RepoItemRoute>()
             RepoItemScreen(
-                id = repoItemRoute.id,
+                name = repoItemRoute.name,
                 navigateBack = { navController.popBackStack() }
             )
         }
