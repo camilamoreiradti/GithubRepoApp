@@ -35,7 +35,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.githubrepoapp.domain.remote.model.RepoItem
-import com.example.githubrepoapp.domain.remote.model.repo2
+import com.example.githubrepoapp.domain.remote.model.repo1
 import com.example.githubrepoapp.presentation.components.InfoSection
 import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
@@ -108,7 +108,7 @@ fun RepoItemContent(
                 .consumeWindowInsets(paddingValues)
                 .fillMaxWidth()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -123,7 +123,7 @@ fun RepoItemContent(
 
             Text(
                 text = repo.owner.name,
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
 
@@ -149,7 +149,7 @@ fun RepoItemContent(
 fun previewRepoItemContent() {
     GithubRepoAppTheme {
         RepoItemContent(
-            repo = repo2,
+            repo = repo1,
             navigateBack = {}
         )
     }
