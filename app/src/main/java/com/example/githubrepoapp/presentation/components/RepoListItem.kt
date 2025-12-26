@@ -45,7 +45,7 @@ fun RepoListItem(
             AsyncImage(
                 model = ImageRequest.Builder(
                     LocalContext.current)
-                    .data(repo.owner?.profilePhoto)
+                    .data(repo.owner.profilePhoto)
                     .crossfade(true)
                     .build(),
                 contentDescription = "Profile Photo",
@@ -54,7 +54,7 @@ fun RepoListItem(
                     .clip(RoundedCornerShape(16.dp))
             )
 
-            repo.fullName?.let {
+            repo.fullName.let {
                 Text(
                     text = it,
                     style = MaterialTheme.typography.titleMedium,
