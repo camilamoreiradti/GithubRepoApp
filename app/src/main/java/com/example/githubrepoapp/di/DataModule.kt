@@ -1,6 +1,6 @@
 package com.example.githubrepoapp.di
 
-import com.example.githubrepoapp.data.remote.api.GithubAPI
+import com.example.githubrepoapp.data.remote.service.GithubService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +18,7 @@ class DataModule {
     @Provides
     fun providesGithubRepoAPI(
         retrofit: Retrofit
-    ): GithubAPI {
-        return retrofit.create(GithubAPI::class.java)
+    ): GithubService {
+        return retrofit.create(GithubService::class.java)
     }
 }

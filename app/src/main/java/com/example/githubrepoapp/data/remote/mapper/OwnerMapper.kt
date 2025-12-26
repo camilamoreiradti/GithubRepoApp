@@ -6,7 +6,6 @@ import com.example.githubrepoapp.domain.remote.model.Owner
 fun OwnerResponse.toDomain(): Owner {
     return Owner(
         profilePhoto = profilePhoto,
-        id = id,
         name = name
     )
 }
