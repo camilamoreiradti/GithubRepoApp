@@ -20,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,23 +30,51 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.githubrepoapp.domain.remote.model.RepoItem
-import com.example.githubrepoapp.domain.remote.model.repo2
+import com.example.githubrepoapp.domain.remote.model.repo1
 import com.example.githubrepoapp.presentation.components.InfoSection
+import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
 fun RepoItemScreen(
-    name: String?,
+    ownerName: String,
+    repoName: String,
     navigateBack: () -> Unit
 ) {
-    RepoItemContent(
-        repo = repo2,
-        navigateBack = navigateBack
-    )
+
+    val viewModel: RepoItemViewModel = hiltViewModel()
+
+    val uiState by viewModel.stateFlow.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadItem(
+            ownerName = ownerName,
+            repoName = repoName
+        )
+    }
+
+    when (val state = uiState) {
+        State.Error -> {}
+
+        State.Loading -> {
+            LoadingIndicator()
+        }
+
+        is State.RepoItemData -> {
+            RepoItemContent(
+                repo = state.repoItem,
+                navigateBack = navigateBack
+            )
+        }
+
+    }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +108,7 @@ fun RepoItemContent(
                 .consumeWindowInsets(paddingValues)
                 .fillMaxWidth()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -92,7 +123,7 @@ fun RepoItemContent(
 
             Text(
                 text = repo.owner.name,
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
 
@@ -118,7 +149,7 @@ fun RepoItemContent(
 fun previewRepoItemContent() {
     GithubRepoAppTheme {
         RepoItemContent(
-            repo = repo2,
+            repo = repo1,
             navigateBack = {}
         )
     }
