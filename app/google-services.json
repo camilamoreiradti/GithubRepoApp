@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "917078079454",
+    "project_id": "github-repo-app-e6bfb",
+    "storage_bucket": "github-repo-app-e6bfb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917078079454:android:3aedba7d995534a72b4f4f",
+        "android_client_info": {
+          "package_name": "com.example.githubrepoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHDGtfgIKBnZUcccO-djcrsL7BDPRh_1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
