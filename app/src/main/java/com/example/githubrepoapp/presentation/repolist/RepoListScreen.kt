@@ -1,10 +1,14 @@
 package com.example.githubrepoapp.presentation.repolist
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -12,22 +16,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.domain.remote.model.RepoItem
 import com.example.githubrepoapp.domain.remote.model.repo1
 import com.example.githubrepoapp.domain.remote.model.repo2
 import com.example.githubrepoapp.domain.remote.model.repo3
-import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.presentation.components.RepoListItem
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
 fun RepoListScreen(
-    onNavigateToRepoItem: (ownerName: String, repoName: String) -> Unit,
+    onNavigateToRepoItem: (name: String?) -> Unit,
 ) {
 
     val viewModel: RepoListViewModel = hiltViewModel()
@@ -54,11 +59,24 @@ fun RepoListScreen(
 }
 
 @Composable
+fun LoadingIndicator() {
+    Box(Modifier.fillMaxSize()) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(64.dp)
+                .align(Alignment.Center),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+    }
+}
+
+@Composable
 fun RepoListContent(
     repos: List<RepoItem>,
-    onNavigateToRepoItem: (ownerName: String, repoName: String) -> Unit
+    onNavigateToRepoItem: (name: String?) -> Unit
 ) {
-    Scaffold { paddingValues ->
+    Scaffold() { paddingValues ->
         Column(
             modifier = Modifier
                 .consumeWindowInsets(paddingValues)
@@ -72,15 +90,12 @@ fun RepoListContent(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
             )
-            LazyColumn {
+            LazyColumn(
+            ) {
                 itemsIndexed(repos) { _, item ->
                     RepoListItem(
                         repo = item,
-                        onItemClicked = {
-                            onNavigateToRepoItem(
-                                item.owner.name, item.name
-                            )
-                        }
+                        onItemClicked = { onNavigateToRepoItem(item.name) }
                     )
                 }
             }
@@ -91,7 +106,7 @@ fun RepoListContent(
 @Preview
 @Composable
 fun previewListScreen() {
-    GithubRepoAppTheme {
+    GithubRepoAppTheme() {
         RepoListContent(
             repos = listOf(
                 repo1,
@@ -109,7 +124,7 @@ fun previewListScreen() {
                 repo1,
                 repo3,
             ),
-            onNavigateToRepoItem = { } as (ownerName: String, repoName: String) -> Unit
+            onNavigateToRepoItem = { }
         )
     }
 }
