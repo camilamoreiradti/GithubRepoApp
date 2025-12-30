@@ -1,4 +1,4 @@
-package com.example.githubrepoapp.data.remote.model
+package com.example.githubrepoapp.data.remote.github.model
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable

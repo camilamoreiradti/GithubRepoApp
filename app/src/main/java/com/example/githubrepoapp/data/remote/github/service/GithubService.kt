@@ -1,6 +1,6 @@
-package com.example.githubrepoapp.data.remote.service
+package com.example.githubrepoapp.data.remote.github.service
 
-import com.example.githubrepoapp.data.remote.model.RepoItemResponse
+import com.example.githubrepoapp.data.remote.github.model.RepoItemResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

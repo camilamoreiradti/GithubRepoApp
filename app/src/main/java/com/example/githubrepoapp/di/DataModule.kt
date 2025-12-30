@@ -1,6 +1,6 @@
 package com.example.githubrepoapp.di
 
-import com.example.githubrepoapp.data.remote.service.GithubService
+import com.example.githubrepoapp.data.remote.github.service.GithubService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ class DataModule {
     // configuração da interface service API
 
     // @Provides é usado para implementações de classes que não são suas (biblioteca externa hilt, retrofit, room etc)
-    // ou se as intâncias precisão ser criandas com padrão build
+    // ou se as intâncias precisam ser criadas com padrão build
     @Provides
     fun providesGithubRepoAPI(
         retrofit: Retrofit

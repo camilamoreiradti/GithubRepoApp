@@ -21,6 +21,8 @@ class AuthActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
         setContent {
+            // acessar o context (minha activity) em
+            val context = LocalContext.current
             GithubRepoAppTheme {
                 Box(
                     modifier = Modifier
@@ -29,8 +31,13 @@ class AuthActivity : ComponentActivity() {
                     AuthNavHost(
                         onAuthSuccess = {
                             // Intent: intenção de navegar da Activity atual (this) para a MainActivity
-                            // startActivity: executa a intenção e inicia a nova activity
-                            startActivity(Intent(this@AuthActivity, MainActivity::class.java))
+                            // startActivity (ComponentActivity): executa a intenção e inicia a nova activity
+                            context.startActivity(
+                                Intent(
+                                    this@AuthActivity,
+                                    MainActivity::class.java
+                                )
+                            )
 
                             // Destrói AuthActivity atual, cria fluxo de navegação SEM VOLTA
                             finish()

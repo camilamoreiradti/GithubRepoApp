@@ -1,4 +1,4 @@
-package com.example.githubrepoapp.domain.remote.model
+package com.example.githubrepoapp.domain.remote.items.model
 
 data class RepoItem(
     val description: String,

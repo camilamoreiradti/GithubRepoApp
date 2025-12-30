@@ -1,9 +1,8 @@
-package com.example.githubrepoapp.data.remote.mapper
+package com.example.githubrepoapp.data.remote.github.mapper
 
-import com.example.githubrepoapp.data.remote.model.RepoItemResponse
-import com.example.githubrepoapp.domain.remote.model.Owner
-import com.example.githubrepoapp.domain.remote.model.RepoItem
-import java.util.UUID
+import com.example.githubrepoapp.data.remote.github.model.RepoItemResponse
+import com.example.githubrepoapp.domain.remote.items.model.Owner
+import com.example.githubrepoapp.domain.remote.items.model.RepoItem
 
 fun RepoItemResponse.toDomain(): RepoItem {
     return RepoItem(

@@ -34,8 +34,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.example.githubrepoapp.domain.remote.model.RepoItem
-import com.example.githubrepoapp.domain.remote.model.repo1
+import com.example.githubrepoapp.domain.remote.items.model.RepoItem
+import com.example.githubrepoapp.domain.remote.items.model.repo1
 import com.example.githubrepoapp.presentation.components.InfoSection
 import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme

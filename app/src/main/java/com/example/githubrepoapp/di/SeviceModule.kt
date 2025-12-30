@@ -2,6 +2,9 @@ package com.example.githubrepoapp.di
 
 import android.content.Context
 import com.example.githubrepoapp.BuildConfig
+import com.example.githubrepoapp.data.remote.auth.service.AccountServiceImpl
+import com.example.githubrepoapp.domain.remote.auth.service.AccountService
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,6 +53,4 @@ class ServiceModule {
             .client(okHttpClient)
             .build()
     }
-
-
 }

@@ -1,10 +1,10 @@
-package com.example.githubrepoapp.data.remote.repository
+package com.example.githubrepoapp.data.remote.github.repository
 
-import com.example.githubrepoapp.data.remote.service.GithubService
-import com.example.githubrepoapp.data.remote.mapper.fromDTOList
-import com.example.githubrepoapp.data.remote.mapper.toDomain
-import com.example.githubrepoapp.domain.remote.model.RepoItem
-import com.example.githubrepoapp.domain.remote.repository.GithubRemoteRepository
+import com.example.githubrepoapp.data.remote.github.mapper.fromDTOList
+import com.example.githubrepoapp.data.remote.github.mapper.toDomain
+import com.example.githubrepoapp.data.remote.github.service.GithubService
+import com.example.githubrepoapp.domain.remote.items.model.RepoItem
+import com.example.githubrepoapp.domain.remote.items.repository.GithubRemoteRepository
 import javax.inject.Inject
 
 class GithubRemoteRepositoryImpl @Inject constructor(
