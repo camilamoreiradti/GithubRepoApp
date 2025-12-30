@@ -8,42 +8,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActionScope
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.githubrepoapp.presentation.UiEvent
 import com.example.githubrepoapp.presentation.components.AuthButton
 import com.example.githubrepoapp.presentation.components.AuthFormFields
-import com.example.githubrepoapp.presentation.components.SecureOutlinedTextField
+import com.example.githubrepoapp.presentation.navigation.ListRoute
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
@@ -51,22 +43,61 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToSignUp: () -> Unit
 ) {
-    LoginContent(onLoginSuccess, onNavigateToSignUp)
+    val viewModel: LoginViewModel = hiltViewModel()
+
+    val uiState by viewModel.stateFlow.collectAsState()
+
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.Navigate<*> -> {
+                    when (uiEvent.route) {
+                        is ListRoute -> {
+                            onLoginSuccess()
+                        }
+                    }
+                }
+
+                is UiEvent.ShowSnackbar -> {
+                    snackBarHostState.showSnackbar(
+                        message = uiEvent.message
+                    )
+                }
+
+                is UiEvent.NavigateBack -> {
+                }
+            }
+        }
+    }
+
+    LoginContent(
+        email = (uiState as LoginViewModel.StateAuth.User).email,
+        password = (uiState as LoginViewModel.StateAuth.User).password,
+        snackBarHostState = snackBarHostState,
+        onEvent = viewModel::onEvent,
+        onNavigateToSignUp = onNavigateToSignUp
+    )
 }
 
 @Composable
 fun LoginContent(
-    onLoginSuccess: () -> Unit,
+    email: String,
+    password: String,
+    snackBarHostState: SnackbarHostState,
+    onEvent: (AuthFormEvent) -> Unit,
     onNavigateToSignUp: () -> Unit
 ) {
-
-    var emailText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
 
     // API do compose para controlar programaticamente o foco entre os elementos da UI
     val focusManager = LocalFocusManager.current
 
-    Scaffold() { paddingValues ->
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -84,21 +115,25 @@ fun LoginContent(
             Spacer(Modifier.height(50.dp))
 
             AuthFormFields(
-                email = emailText,
-                onEmailChange = { emailText = it },
-                password = passwordText,
-                onPasswordChange = { passwordText = it },
-                onSubmit = { onLoginSuccess() }
+                email = email,
+                onEmailChange = {
+                    onEvent(AuthFormEvent.EmailChanged(it))
+                },
+                password = password,
+                onPasswordChange = {
+                    onEvent(AuthFormEvent.PasswordChanged(it))
+                },
+                onSubmit = { onEvent(AuthFormEvent.Submit) }
             )
 
             Spacer(Modifier.height(12.dp))
 
             AuthButton(
                 text = "Log In",
-                email = emailText,
-                password = passwordText,
-                enabled = emailText.isNotBlank() && passwordText.isNotBlank(),
-                onClick = { onLoginSuccess() }
+                email = email,
+                password = password,
+                enabled = email.isNotBlank() && password.isNotBlank(),
+                onClick = { onEvent(AuthFormEvent.Submit) }
             )
 
             Spacer(Modifier.height(12.dp))
@@ -151,8 +186,11 @@ fun LoginContent(
 fun LoginPreview() {
     GithubRepoAppTheme(darkTheme = false, dynamicColor = false) {
         LoginContent(
-            onLoginSuccess = { },
-            onNavigateToSignUp = { }
+            onEvent = { },
+            onNavigateToSignUp = { },
+            snackBarHostState = SnackbarHostState(),
+            email = "",
+            password = ""
         )
     }
 }
