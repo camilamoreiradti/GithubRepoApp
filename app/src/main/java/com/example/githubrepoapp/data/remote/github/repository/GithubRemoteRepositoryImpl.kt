@@ -3,8 +3,8 @@ package com.example.githubrepoapp.data.remote.github.repository
 import com.example.githubrepoapp.data.remote.github.mapper.fromDTOList
 import com.example.githubrepoapp.data.remote.github.mapper.toDomain
 import com.example.githubrepoapp.data.remote.github.service.GithubService
-import com.example.githubrepoapp.domain.remote.items.model.RepoItem
-import com.example.githubrepoapp.domain.remote.items.repository.GithubRemoteRepository
+import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
+import com.example.githubrepoapp.domain.remote.repositories.repository.GithubRemoteRepository
 import javax.inject.Inject
 
 class GithubRemoteRepositoryImpl @Inject constructor(

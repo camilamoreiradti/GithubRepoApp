@@ -1,6 +1,6 @@
-package com.example.githubrepoapp.domain.remote.items.repository
+package com.example.githubrepoapp.domain.remote.repositories.repository
 
-import com.example.githubrepoapp.domain.remote.items.model.RepoItem
+import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 
 interface GithubRemoteRepository {
     suspend fun getRepoItem(ownerName: String, repoName: String) : RepoItem

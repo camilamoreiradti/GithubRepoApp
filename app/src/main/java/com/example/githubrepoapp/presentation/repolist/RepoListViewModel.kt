@@ -3,9 +3,9 @@ package com.example.githubrepoapp.presentation.repolist
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubrepoapp.domain.remote.items.model.RepoItem
+import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.presentation.baseviewmodel.State
-import com.example.githubrepoapp.domain.usecase.GetRepoListUseCase
+import com.example.githubrepoapp.domain.remote.repositories.usecase.GetRepoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

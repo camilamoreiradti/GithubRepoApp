@@ -5,7 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.githubrepoapp.domain.remote.items.model.repo1
+import com.example.githubrepoapp.domain.remote.repositories.model.repo1
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable

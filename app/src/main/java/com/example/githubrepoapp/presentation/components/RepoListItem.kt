@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.example.githubrepoapp.domain.remote.items.model.RepoItem
-import com.example.githubrepoapp.domain.remote.items.model.repo1
+import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
+import com.example.githubrepoapp.domain.remote.repositories.model.repo1
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable

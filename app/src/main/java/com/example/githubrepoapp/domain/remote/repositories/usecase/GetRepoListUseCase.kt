@@ -1,7 +1,7 @@
-package com.example.githubrepoapp.domain.usecase
+package com.example.githubrepoapp.domain.remote.repositories.usecase
 
-import com.example.githubrepoapp.domain.remote.items.model.RepoItem
-import com.example.githubrepoapp.domain.remote.items.repository.GithubRemoteRepository
+import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
+import com.example.githubrepoapp.domain.remote.repositories.repository.GithubRemoteRepository
 import javax.inject.Inject
 
 class GetRepoListUseCase @Inject constructor(

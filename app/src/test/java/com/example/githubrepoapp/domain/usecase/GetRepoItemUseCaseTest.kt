@@ -1,8 +1,9 @@
 package com.example.githubrepoapp.domain.usecase
 
-import com.example.githubrepoapp.domain.remote.items.model.Owner
-import com.example.githubrepoapp.domain.remote.items.model.RepoItem
-import com.example.githubrepoapp.domain.remote.items.repository.GithubRemoteRepository
+import com.example.githubrepoapp.domain.remote.repositories.model.Owner
+import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
+import com.example.githubrepoapp.domain.remote.repositories.repository.GithubRemoteRepository
+import com.example.githubrepoapp.domain.remote.repositories.usecase.GetRepoItemUseCase
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify

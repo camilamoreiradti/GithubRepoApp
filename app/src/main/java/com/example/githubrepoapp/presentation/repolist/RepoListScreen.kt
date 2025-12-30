@@ -17,11 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.githubrepoapp.domain.remote.items.model.RepoItem
+import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.presentation.baseviewmodel.State
-import com.example.githubrepoapp.domain.remote.items.model.repo1
-import com.example.githubrepoapp.domain.remote.items.model.repo2
-import com.example.githubrepoapp.domain.remote.items.model.repo3
+import com.example.githubrepoapp.domain.remote.repositories.model.repo1
+import com.example.githubrepoapp.domain.remote.repositories.model.repo2
+import com.example.githubrepoapp.domain.remote.repositories.model.repo3
 import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.presentation.components.RepoListItem
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme

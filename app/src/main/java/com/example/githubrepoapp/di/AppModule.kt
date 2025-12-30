@@ -3,7 +3,7 @@ package com.example.githubrepoapp.di
 import com.example.githubrepoapp.data.remote.auth.service.AccountServiceImpl
 import com.example.githubrepoapp.data.remote.github.repository.GithubRemoteRepositoryImpl
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
-import com.example.githubrepoapp.domain.remote.items.repository.GithubRemoteRepository
+import com.example.githubrepoapp.domain.remote.repositories.repository.GithubRemoteRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
