@@ -1,7 +1,9 @@
 package com.example.githubrepoapp.di
 
-import com.example.githubrepoapp.data.remote.repository.GithubRemoteRepositoryImpl
-import com.example.githubrepoapp.domain.remote.repository.GithubRemoteRepository
+import com.example.githubrepoapp.data.remote.auth.service.AccountServiceImpl
+import com.example.githubrepoapp.data.remote.github.repository.GithubRemoteRepositoryImpl
+import com.example.githubrepoapp.domain.remote.auth.service.AccountService
+import com.example.githubrepoapp.domain.remote.items.repository.GithubRemoteRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,7 +17,12 @@ abstract class AppModule {
 
     // Binds é usado para informar a implementação de uma interface
     @Binds
-    abstract fun bindsRepoRemoteRepositoryImpl(
-        repoRemoteRepositoryImpl: GithubRemoteRepositoryImpl
-    ) : GithubRemoteRepository
+    abstract fun bindsGithubRemoteRepositoryImpl(
+        githubRemoteRepositoryImpl: GithubRemoteRepositoryImpl
+    ): GithubRemoteRepository
+
+    @Binds
+    abstract fun bindsAccountServiceImpl(
+        accountServiceImpl: AccountServiceImpl
+    ): AccountService
 }
