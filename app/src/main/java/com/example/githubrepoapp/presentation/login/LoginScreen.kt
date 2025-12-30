@@ -32,7 +32,8 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.githubrepoapp.presentation.UiEvent
+import com.example.githubrepoapp.presentation.baseviewmodel.State
+import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.components.AuthButton
 import com.example.githubrepoapp.presentation.components.AuthFormFields
 import com.example.githubrepoapp.presentation.navigation.ListRoute
@@ -48,6 +49,8 @@ fun LoginScreen(
     val uiState by viewModel.stateFlow.collectAsState()
 
     val snackBarHostState = remember { SnackbarHostState() }
+
+    val stateSuccess = (uiState as State.Success<LoginViewModel.User>).data
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { uiEvent ->
@@ -73,8 +76,8 @@ fun LoginScreen(
     }
 
     LoginContent(
-        email = (uiState as LoginViewModel.StateAuth.User).email,
-        password = (uiState as LoginViewModel.StateAuth.User).password,
+        email = stateSuccess.email,
+        password = stateSuccess.password,
         snackBarHostState = snackBarHostState,
         onEvent = viewModel::onEvent,
         onNavigateToSignUp = onNavigateToSignUp

@@ -1,4 +1,4 @@
-package com.example.githubrepoapp.presentation
+package com.example.githubrepoapp.presentation.baseviewmodel
 
 interface UiEvent {
     data class ShowSnackbar(val message: String) : UiEvent

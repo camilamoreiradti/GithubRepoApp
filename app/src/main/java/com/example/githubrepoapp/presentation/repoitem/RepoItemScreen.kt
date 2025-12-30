@@ -39,6 +39,7 @@ import com.example.githubrepoapp.domain.remote.items.model.repo1
 import com.example.githubrepoapp.presentation.components.InfoSection
 import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
+import com.example.githubrepoapp.presentation.baseviewmodel.State
 
 @Composable
 fun RepoItemScreen(
@@ -65,16 +66,14 @@ fun RepoItemScreen(
             LoadingIndicator()
         }
 
-        is State.RepoItemData -> {
+        is State.Success<*> -> {
             RepoItemContent(
-                repo = state.repoItem,
+                repo = state.data as RepoItem,
                 navigateBack = navigateBack
             )
         }
 
     }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

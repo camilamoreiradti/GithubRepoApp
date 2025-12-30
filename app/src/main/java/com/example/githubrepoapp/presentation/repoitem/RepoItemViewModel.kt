@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import com.example.githubrepoapp.presentation.baseviewmodel.State
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class RepoItemViewModel @Inject constructor(
     private val getRepoItemUseCase: GetRepoItemUseCase
 ) : ViewModel() {
 
-    private val _stateFlow: MutableStateFlow<State> = MutableStateFlow(State.Loading)
+    private val _stateFlow = MutableStateFlow<State<RepoItem>>(State.Loading)
     val stateFlow = _stateFlow.asStateFlow()
 
     fun loadItem(ownerName: String, repoName: String) {
@@ -31,19 +32,11 @@ class RepoItemViewModel @Inject constructor(
                     onSuccess =
                         { item ->
                             _stateFlow.update { _ ->
-                                State.RepoItemData(item)
+                                State.Success(item)
                             }
                         },
                     onFailure = { Log.d("Exception", it.message.toString()) }
                 )
         }
     }
-}
-
-sealed class State {
-    object Error : State()
-    object Loading : State()
-    data class RepoItemData(
-        val repoItem: RepoItem
-    ) : State()
 }

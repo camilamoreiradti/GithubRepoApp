@@ -3,7 +3,8 @@ package com.example.githubrepoapp.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
-import com.example.githubrepoapp.presentation.UiEvent
+import com.example.githubrepoapp.presentation.baseviewmodel.State
+import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.navigation.ListRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,22 +21,24 @@ class LoginViewModel @Inject constructor(
     private val accountService: AccountService
 ) : ViewModel() {
 
-    private val _stateFlow: MutableStateFlow<StateAuth> = MutableStateFlow(StateAuth.User())
+    private val _stateFlow = MutableStateFlow<State<User>>(State.Success(User()))
     val stateFlow = _stateFlow.asStateFlow()
 
     fun onEvent(event: AuthFormEvent) {
         _stateFlow.update { state ->
-            (if (state is StateAuth.User) {
+            if (state is State.Success) {
                 when (event) {
                     is AuthFormEvent.EmailChanged -> {
-                        state.copy(email = event.email)
+                        state.copy(data = state.data.copy(email = event.email))
                     }
 
                     is AuthFormEvent.PasswordChanged -> {
-                        state.copy(password = event.password)
+                        state.copy(data = state.data.copy(password = event.password))
                     }
 
-                    is AuthFormEvent.ConfirmPasswordChanged -> {}
+                    is AuthFormEvent.ConfirmPasswordChanged -> {
+                        state
+                    }
 
                     is AuthFormEvent.Submit -> {
                         onLoginClick()
@@ -44,7 +47,7 @@ class LoginViewModel @Inject constructor(
                 }
             } else {
                 state
-            }) as StateAuth
+            }
         }
     }
 
@@ -53,23 +56,16 @@ class LoginViewModel @Inject constructor(
 
     fun onLoginClick() {
         viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                val currentState = _stateFlow.value as StateAuth.User
-                accountService.logIn(currentState.email, currentState.password)
-            }.onSuccess {
-                _uiEvent.send(UiEvent.Navigate(ListRoute))
-            }.onFailure {
-                _uiEvent.send(UiEvent.ShowSnackbar("Incorrect email or password"))
-            }
+            val currentState = _stateFlow.value as State.Success<User>
+            accountService.logIn(currentState.data.email, currentState.data.password).fold(
+                onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
+                onFailure = { _uiEvent.send(UiEvent.ShowSnackbar("Incorrect email or password")) }
+            )
         }
     }
 
-    sealed class StateAuth {
-        object Error : StateAuth()
-        object Loading : StateAuth()
-        data class User(
-            val email: String = "",
-            val password: String = ""
-        ) : StateAuth()
-    }
+    data class User(
+        val email: String = "",
+        val password: String = ""
+    )
 }

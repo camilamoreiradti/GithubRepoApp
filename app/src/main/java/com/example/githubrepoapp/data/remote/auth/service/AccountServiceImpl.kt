@@ -23,8 +23,13 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         return false
     }
 
-    override suspend fun logIn(email: String, password: String) {
-        Firebase.auth.signInWithEmailAndPassword(email, password).await()
+    override suspend fun logIn(email: String, password: String): Result<Unit> {
+        return try {
+            Firebase.auth.signInWithEmailAndPassword(email, password).await()
+            Result.success<Unit>(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun signUp(email: String, password: String) {

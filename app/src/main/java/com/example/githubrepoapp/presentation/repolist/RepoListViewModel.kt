@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.domain.remote.items.model.RepoItem
+import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.domain.usecase.GetRepoListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ class RepoListViewModel @Inject constructor(
     private val getRepoListUseCase: GetRepoListUseCase,
 ) : ViewModel() {
 
-    private val _stateFlow: MutableStateFlow<State> = MutableStateFlow(State.Loading)
+    private val _stateFlow= MutableStateFlow<State<List<RepoItem>>>(State.Loading)
     val stateFlow = _stateFlow.asStateFlow()
 
     fun getRepoList() {
@@ -26,19 +27,11 @@ class RepoListViewModel @Inject constructor(
             getRepoListUseCase().fold(
                 onSuccess = {  list ->
                     _stateFlow.update { _->
-                        State.RepoList(list)
+                        State.Success(list)
                     }
                 },
                 onFailure = { Log.d("Exception", it.message.toString()) }
             )
         }
     }
-}
-
-sealed class State {
-    object Error: State()
-    object Loading : State()
-    data class RepoList(
-        val repoList: List<RepoItem>
-    ) : State()
 }
