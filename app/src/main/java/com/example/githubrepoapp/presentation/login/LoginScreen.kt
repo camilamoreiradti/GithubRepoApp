@@ -36,6 +36,7 @@ import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.components.AuthButton
 import com.example.githubrepoapp.presentation.components.AuthFormFields
+import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.presentation.navigation.ListRoute
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
@@ -50,9 +51,9 @@ fun LoginScreen(
 
     val snackBarHostState = remember { SnackbarHostState() }
 
-    val stateSuccess = (uiState as State.Success<LoginViewModel.User>).data
-
     LaunchedEffect(Unit) {
+        viewModel.loadScreen()
+
         viewModel.uiEvent.collect { uiEvent ->
             when (uiEvent) {
                 is UiEvent.Navigate<*> -> {
@@ -75,13 +76,25 @@ fun LoginScreen(
         }
     }
 
-    LoginContent(
-        email = stateSuccess.email,
-        password = stateSuccess.password,
-        snackBarHostState = snackBarHostState,
-        onEvent = viewModel::onEvent,
-        onNavigateToSignUp = onNavigateToSignUp
-    )
+    when (uiState) {
+        State.Error -> {}
+
+        State.Loading -> {
+            LoadingIndicator()
+        }
+
+        is State.Success -> {
+            val stateSuccess = (uiState as State.Success).data
+
+            LoginContent(
+                email = stateSuccess.email,
+                password = stateSuccess.password,
+                snackBarHostState = snackBarHostState,
+                onEvent = viewModel::onEvent,
+                onNavigateToSignUp = onNavigateToSignUp
+            )
+        }
+    }
 }
 
 @Composable

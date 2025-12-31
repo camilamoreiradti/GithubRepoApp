@@ -21,8 +21,14 @@ class LoginViewModel @Inject constructor(
     private val accountService: AccountService
 ) : ViewModel() {
 
-    private val _stateFlow = MutableStateFlow<State<User>>(State.Success(User()))
+    private val _stateFlow = MutableStateFlow<State<User>>(State.Loading)
     val stateFlow = _stateFlow.asStateFlow()
+
+    fun loadScreen() {
+        _stateFlow.update { _ ->
+            State.Success(User())
+        }
+    }
 
     fun onEvent(event: AuthFormEvent) {
         _stateFlow.update { state ->
