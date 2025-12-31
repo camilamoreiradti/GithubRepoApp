@@ -3,6 +3,7 @@ package com.example.githubrepoapp.presentation.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
+import com.example.githubrepoapp.domain.remote.auth.usecase.SignUpUseCase
 import com.example.githubrepoapp.presentation.AuthFormEvent
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val accountService: AccountService
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<State<User>>(State.Loading)
@@ -78,7 +79,7 @@ class SignUpViewModel @Inject constructor(
                 }
 
                 else -> {
-                    accountService.signUp(currentState.data.email, currentState.data.password)
+                    signUpUseCase(currentState.data.email, currentState.data.password)
                         .fold(
                             onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
                             onFailure = { message = it.message.toString() }
