@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -28,8 +30,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.githubrepoapp.presentation.AuthFormEvent
+import com.example.githubrepoapp.presentation.baseviewmodel.State
+import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.components.AuthButton
 import com.example.githubrepoapp.presentation.components.AuthFormFields
+import com.example.githubrepoapp.presentation.components.LoadingIndicator
+import com.example.githubrepoapp.presentation.navigation.ListRoute
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
@@ -37,21 +45,78 @@ fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onNavigateToLogIn: () -> Unit
 ) {
-    SignUpContent(onNavigateToLogIn)
+    val viewModel: SignUpViewModel = hiltViewModel()
+
+    val uiState by viewModel.stateFlow.collectAsState()
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadScreen()
+
+        viewModel.uiEvent.collect { uiEvent ->
+            when (uiEvent) {
+                is UiEvent.Navigate<*> -> {
+                    when (uiEvent.route) {
+                        is ListRoute -> {
+                            onSignUpSuccess()
+                        }
+                    }
+                }
+
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = uiEvent.message
+                    )
+                }
+
+                is UiEvent.NavigateBack -> {
+
+                }
+            }
+        }
+    }
+
+    when (uiState) {
+        State.Error -> {}
+
+        State.Loading -> {
+            LoadingIndicator()
+        }
+
+        is State.Success -> {
+            val stateSuccess = (uiState as State.Success).data
+
+            SignUpContent(
+                email = stateSuccess.email,
+                password = stateSuccess.password,
+                confirmPassword = stateSuccess.confirmPassword,
+                snackbarHostState = snackbarHostState,
+                onEvent = viewModel::onEvent,
+                onNavigateToLogIn = onNavigateToLogIn,
+            )
+        }
+    }
 }
 
 @Composable
 fun SignUpContent(
+    email: String,
+    password: String,
+    confirmPassword: String,
+    onEvent: (AuthFormEvent) -> Unit,
+    snackbarHostState: SnackbarHostState,
     onNavigateToLogIn: () -> Unit
 ) {
-    var emailText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
-    var confirmPasswordText by remember { mutableStateOf("") }
 
     // API do compose para controlar programaticamente o foco entre os elementos da UI
     val focusManager = LocalFocusManager.current
 
-    Scaffold() { paddingValues ->
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,25 +134,25 @@ fun SignUpContent(
             Spacer(Modifier.height(50.dp))
 
             AuthFormFields(
-                email = emailText,
-                onEmailChange = {  newValue -> emailText = newValue },
-                password = passwordText,
-                onPasswordChange = { passwordText = it },
-                confirmPassword = confirmPasswordText,
-                onConfirmPasswordChange = {  newValue -> confirmPasswordText = newValue },
-                onSubmit = { }
+                email = email,
+                onEmailChange = { onEvent(AuthFormEvent.EmailChanged(it)) },
+                password = password,
+                onPasswordChange = { onEvent(AuthFormEvent.PasswordChanged(it)) },
+                confirmPassword = confirmPassword,
+                onConfirmPasswordChange = { onEvent(AuthFormEvent.ConfirmPasswordChanged(it)) },
+                onSubmit = { onEvent(AuthFormEvent.Submit) }
             )
 
             Spacer(Modifier.height(12.dp))
 
             AuthButton(
                 text = "Sign In",
-                email = emailText,
-                password = passwordText,
-                enabled = emailText.isNotBlank()
-                        && passwordText.isNotBlank()
-                        && confirmPasswordText.isNotBlank(),
-                onClick = { }
+                email = email,
+                password = password,
+                enabled = email.isNotBlank()
+                        && password.isNotBlank()
+                        && confirmPassword.isNotBlank(),
+                onClick = { onEvent(AuthFormEvent.Submit) }
             )
 
             Spacer(Modifier.height(12.dp))
@@ -97,7 +162,7 @@ fun SignUpContent(
                     append("Have an account already? ")
                     withLink(
                         LinkAnnotation.Clickable(
-                            tag = "signup",
+                            tag = "login",
                             styles = TextLinkStyles(
                                 style = SpanStyle(
                                     color = MaterialTheme.colorScheme.primary,
@@ -138,7 +203,12 @@ fun SignUpContent(
 fun SignUpPreview() {
     GithubRepoAppTheme() {
         SignUpContent(
-            onNavigateToLogIn = { }
+            onNavigateToLogIn = {},
+            email = "",
+            password = "",
+            confirmPassword = "",
+            onEvent = {},
+            snackbarHostState = SnackbarHostState()
         )
     }
 }

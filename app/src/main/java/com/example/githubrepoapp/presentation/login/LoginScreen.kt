@@ -32,6 +32,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.githubrepoapp.presentation.AuthFormEvent
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.components.AuthButton

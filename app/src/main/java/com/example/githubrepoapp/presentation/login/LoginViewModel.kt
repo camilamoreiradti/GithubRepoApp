@@ -3,6 +3,7 @@ package com.example.githubrepoapp.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
+import com.example.githubrepoapp.presentation.AuthFormEvent
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.navigation.ListRoute
