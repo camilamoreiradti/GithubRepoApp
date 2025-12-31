@@ -64,15 +64,31 @@ class LoginViewModel @Inject constructor(
     fun onLoginClick() {
         viewModelScope.launch(Dispatchers.IO) {
             val currentState = _stateFlow.value as State.Success<User>
-            accountService.logIn(currentState.data.email, currentState.data.password).fold(
-                onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
-                onFailure = { _uiEvent.send(UiEvent.ShowSnackbar("Incorrect email or password")) }
-            )
+            val email = currentState.data.email
+            val password = currentState.data.password
+
+            lateinit var message: String
+
+            when {
+                email.isBlank() || password.isBlank() -> {
+                    message = "Email and password cannot be empty"
+                }
+
+                else -> {
+                    accountService.logIn(currentState.data.email, currentState.data.password).fold(
+                        onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
+                        onFailure = { message = it.message.toString() }
+                    )
+                }
+            }
+            _uiEvent.send(UiEvent.ShowSnackbar(message))
         }
     }
 
-    data class User(
-        val email: String = "",
-        val password: String = ""
-    )
+
 }
+
+data class User(
+    val email: String = "",
+    val password: String = ""
+)
