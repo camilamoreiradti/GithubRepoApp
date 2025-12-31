@@ -2,7 +2,7 @@ package com.example.githubrepoapp.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubrepoapp.domain.remote.auth.service.AccountService
+import com.example.githubrepoapp.domain.remote.auth.usecase.LoginUseCase
 import com.example.githubrepoapp.presentation.AuthFormEvent
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val accountService: AccountService
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<State<User>>(State.Loading)
@@ -67,7 +67,7 @@ class LoginViewModel @Inject constructor(
             val email = currentState.data.email
             val password = currentState.data.password
 
-            lateinit var message: String
+            var message: String? = null
 
             when {
                 email.isBlank() || password.isBlank() -> {
@@ -75,13 +75,14 @@ class LoginViewModel @Inject constructor(
                 }
 
                 else -> {
-                    accountService.logIn(currentState.data.email, currentState.data.password).fold(
-                        onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
-                        onFailure = { message = it.message.toString() }
-                    )
+                    loginUseCase(currentState.data.email, currentState.data.password)
+                        .fold(
+                            onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
+                            onFailure = { message = it.message.toString() }
+                        )
                 }
             }
-            _uiEvent.send(UiEvent.ShowSnackbar(message))
+            message?.let { _uiEvent.send(UiEvent.ShowSnackbar(it)) }
         }
     }
 

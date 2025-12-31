@@ -66,7 +66,7 @@ class SignUpViewModel @Inject constructor(
             val currentState = _stateFlow.value as State.Success<User>
             val password = currentState.data.password
 
-            lateinit var message: String
+            var message: String? = null
 
             when {
                 password != currentState.data.confirmPassword -> {
@@ -80,14 +80,12 @@ class SignUpViewModel @Inject constructor(
                 else -> {
                     accountService.signUp(currentState.data.email, currentState.data.password)
                         .fold(
-                            onSuccess = {
-                                _uiEvent.send(UiEvent.Navigate(ListRoute))
-                            },
+                            onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
                             onFailure = { message = it.message.toString() }
                         )
                 }
             }
-            _uiEvent.send(UiEvent.ShowSnackbar(message))
+            message?.let { _uiEvent.send(UiEvent.ShowSnackbar(it)) }
         }
     }
 }
