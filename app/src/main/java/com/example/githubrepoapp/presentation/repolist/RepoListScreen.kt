@@ -74,10 +74,22 @@ fun RepoListContent(
     repos: List<RepoItem>,
     onNavigateToRepoItem: (ownerName: String, repoName: String) -> Unit
 ) {
-    Scaffold (
+    Scaffold(
         topBar = {
+
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .consumeWindowInsets(paddingValues)
+                .padding(16.dp)
+        ) {
             TopAppBar(
-                title = { Text("email.com")},
+                title = {
+                    Text(
+                        text = "email.com",
+                    )
+                },
                 actions = {
                     IconButton(
                         onClick = onLogout,
@@ -90,15 +102,9 @@ fun RepoListContent(
                                 .padding(8.dp),
                         )
                     }
-                }
+                },
+                modifier = Modifier.padding(0.dp)
             )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .consumeWindowInsets(paddingValues)
-                .padding(16.dp)
-        ) {
 
             Text(
                 text = "Repositories",
@@ -125,7 +131,6 @@ fun RepoListContent(
 
 @Preview
 @Composable
-@Suppress("UNCHECKED_CAST")
 fun previewListScreen() {
     GithubRepoAppTheme {
         RepoListContent(
@@ -145,7 +150,7 @@ fun previewListScreen() {
                 repo1,
                 repo3,
             ),
-            onNavigateToRepoItem = { } as (ownerName: String, repoName: String) -> Unit,
+            onNavigateToRepoItem = { _: String, _: String -> },
             onLogout = { }
         )
     }

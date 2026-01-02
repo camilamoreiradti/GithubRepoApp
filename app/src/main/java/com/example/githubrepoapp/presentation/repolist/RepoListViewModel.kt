@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
+import com.example.githubrepoapp.domain.remote.auth.usecase.AuthState
+import com.example.githubrepoapp.domain.remote.auth.usecase.LogoutUseCase
+import com.example.githubrepoapp.domain.remote.auth.usecase.MonitorAuthenticationUseCase
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.domain.remote.repositories.usecase.GetRepoListUseCase
@@ -18,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RepoListViewModel @Inject constructor(
     private val getRepoListUseCase: GetRepoListUseCase,
-    private val accountService: AccountService
+    private val monitorAuthenticationUseCase: MonitorAuthenticationUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<State<List<RepoItem>>>(State.Loading)
@@ -26,8 +30,8 @@ class RepoListViewModel @Inject constructor(
 
     fun initialize(restartApp: () -> Unit) {
         viewModelScope.launch {
-            accountService.currentUser.collect { user ->
-                if (user == null) restartApp()
+            monitorAuthenticationUseCase().collect { authState ->
+                if (authState is AuthState.Unauthenticated) restartApp()
             }
         }
     }
@@ -47,7 +51,7 @@ class RepoListViewModel @Inject constructor(
 
     fun onLogoutClick() {
         viewModelScope.launch(Dispatchers.IO) {
-            accountService.logOut()
+            logoutUseCase()
         }
     }
 }
