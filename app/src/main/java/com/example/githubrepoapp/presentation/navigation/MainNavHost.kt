@@ -7,7 +7,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.githubrepoapp.presentation.repoitem.RepoItemScreen
 import com.example.githubrepoapp.presentation.repolist.RepoListScreen
+import com.example.githubrepoapp.presentation.splash.SplashScreen
 import kotlinx.serialization.Serializable
+
+@Serializable
+object SplashRoute
 
 @Serializable
 object ListRoute
@@ -16,10 +20,19 @@ object ListRoute
 data class RepoItemRoute(val ownerName: String, val repoName: String)
 
 @Composable
-fun MainNavHost() {
+fun MainNavHost(
+    toSignIn: () -> Unit
+) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = ListRoute) {
+    NavHost(navController = navController, startDestination = SplashRoute) {
+        composable<SplashRoute> {
+            SplashScreen(
+                toSignIn = toSignIn,
+                toListScreen = { navController.navigate(ListRoute) }
+            )
+        }
+
         composable<ListRoute> {
             RepoListScreen(
                 onNavigateToRepoItem = { ownerName, repoName ->

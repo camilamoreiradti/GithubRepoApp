@@ -20,13 +20,13 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         get() = Firebase.auth.currentUser?.uid.orEmpty()
 
     override fun hasUser(): Boolean {
-        return false
+        return Firebase.auth.currentUser != null
     }
 
     override suspend fun logIn(email: String, password: String): Result<Unit> {
         return try {
             Firebase.auth.signInWithEmailAndPassword(email, password).await()
-            Result.success<Unit>(Unit)
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
