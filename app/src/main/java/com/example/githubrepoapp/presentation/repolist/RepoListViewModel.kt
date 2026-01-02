@@ -3,6 +3,7 @@ package com.example.githubrepoapp.presentation.repolist
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.domain.remote.repositories.usecase.GetRepoListUseCase
@@ -17,21 +18,36 @@ import javax.inject.Inject
 @HiltViewModel
 class RepoListViewModel @Inject constructor(
     private val getRepoListUseCase: GetRepoListUseCase,
+    private val accountService: AccountService
 ) : ViewModel() {
 
-    private val _stateFlow= MutableStateFlow<State<List<RepoItem>>>(State.Loading)
+    private val _stateFlow = MutableStateFlow<State<List<RepoItem>>>(State.Loading)
     val stateFlow = _stateFlow.asStateFlow()
+
+    fun initialize(restartApp: () -> Unit) {
+        viewModelScope.launch {
+            accountService.currentUser.collect { user ->
+                if (user == null) restartApp()
+            }
+        }
+    }
 
     fun getRepoList() {
         viewModelScope.launch(Dispatchers.IO) {
             getRepoListUseCase().fold(
-                onSuccess = {  list ->
-                    _stateFlow.update { _->
+                onSuccess = { list ->
+                    _stateFlow.update { _ ->
                         State.Success(list)
                     }
                 },
                 onFailure = { Log.d("Exception", it.message.toString()) }
             )
+        }
+    }
+
+    fun onLogoutClick() {
+        viewModelScope.launch(Dispatchers.IO) {
+            accountService.logOut()
         }
     }
 }

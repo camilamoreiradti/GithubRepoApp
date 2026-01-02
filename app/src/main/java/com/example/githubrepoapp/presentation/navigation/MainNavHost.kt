@@ -29,12 +29,23 @@ fun MainNavHost(
         composable<SplashRoute> {
             SplashScreen(
                 toSignIn = toSignIn,
-                toListScreen = { navController.navigate(ListRoute) }
+                toListScreen = {
+                    navController.navigate(ListRoute) {
+                        launchSingleTop = true
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
 
         composable<ListRoute> {
             RepoListScreen(
+                toSignIn = {
+                    navController.navigate(SplashRoute) {
+                        launchSingleTop = true
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
                 onNavigateToRepoItem = { ownerName, repoName ->
                     navController.navigate(
                         RepoItemRoute(

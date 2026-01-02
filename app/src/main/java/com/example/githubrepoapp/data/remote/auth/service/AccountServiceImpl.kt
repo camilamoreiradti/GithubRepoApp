@@ -3,7 +3,9 @@ package com.example.githubrepoapp.data.remote.auth.service
 import com.example.githubrepoapp.domain.remote.auth.model.User
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -13,7 +15,13 @@ class AccountServiceImpl @Inject constructor() : AccountService {
 
     override val currentUser: Flow<User?>
         get() = callbackFlow {
-            TODO()
+            val listener = FirebaseAuth.AuthStateListener { auth ->
+                this.trySend(auth.currentUser?.let { User(it.uid, it.email) })
+            }
+
+            Firebase.auth.addAuthStateListener(listener)
+            // remove listener se o app for fechado
+            awaitClose { Firebase.auth.removeAuthStateListener(listener) }
         }
 
     override val currentUserId: String
@@ -42,7 +50,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
     }
 
     override suspend fun logOut() {
-        TODO("Not yet implemented")
+        Firebase.auth.signOut()
     }
 
     override suspend fun deleteAccount() {
