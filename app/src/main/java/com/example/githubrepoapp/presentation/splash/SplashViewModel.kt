@@ -2,13 +2,11 @@ package com.example.githubrepoapp.presentation.splash
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.domain.remote.auth.usecase.HasUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,22 +25,20 @@ class SplashViewModel @Inject constructor(
     }
 
     fun onAppStart() {
-        viewModelScope.launch {
-            try {
-                val isAuthenticated = hasUserUseCase()
-                _authState.update {
-                    if (isAuthenticated) {
-                        AuthState.Authenticated
-                    } else {
-                        AuthState.Unauthenticated
-                    }
+        try {
+            val isAuthenticated = hasUserUseCase()
+            _authState.update {
+                if (isAuthenticated) {
+                    AuthState.Authenticated
+                } else {
+                    AuthState.Unauthenticated
                 }
-            } catch (e: Exception) {
-                Log.e("SplashViewModel", "Erro ao verificar auth")
-                _authState.update { AuthState.Error(e.message ?: "Unknown error") }
-            } finally {
-                _isLoading.value = false
             }
+        } catch (e: Exception) {
+            Log.e("SplashViewModel", "Erro ao verificar auth")
+            _authState.update { AuthState.Error(e.message ?: "Unknown error") }
+        } finally {
+            _isLoading.value = false
         }
     }
 }
