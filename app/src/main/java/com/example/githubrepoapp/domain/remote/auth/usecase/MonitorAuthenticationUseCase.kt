@@ -4,8 +4,9 @@ import com.example.githubrepoapp.domain.remote.auth.model.User
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class MonitorAuthenticationUseCase(
+class MonitorAuthenticationUseCase @Inject constructor(
     private val accountService: AccountService
 ) {
     operator fun invoke(): Flow<AuthState> {
