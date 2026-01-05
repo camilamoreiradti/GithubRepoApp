@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Theme.App.Starting" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Cor de fundo -->
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+
+        <!-- Ícone central -->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/github_repo_app_logo_png</item>
+
+        <!-- Duração da animação do ícone (opcional) -->
+        <item name="android:windowSplashScreenAnimationDuration">1000</item>
+
+        <!-- Cor do ícone (para ícones vetoriais) -->
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/white</item>
+
+        <!-- Tema que será usado após a splash -->
+        <item name="postSplashScreenTheme">@style/Theme.GithubRepoApp</item>
+    </style>
+
     <style name="Theme.GithubRepoApp" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
