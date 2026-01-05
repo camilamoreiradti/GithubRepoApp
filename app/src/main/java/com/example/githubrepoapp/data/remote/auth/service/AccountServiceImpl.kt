@@ -3,7 +3,9 @@ package com.example.githubrepoapp.data.remote.auth.service
 import com.example.githubrepoapp.domain.remote.auth.model.User
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -13,20 +15,26 @@ class AccountServiceImpl @Inject constructor() : AccountService {
 
     override val currentUser: Flow<User?>
         get() = callbackFlow {
-            TODO()
+            val listener = FirebaseAuth.AuthStateListener { auth ->
+                this.trySend(auth.currentUser?.let { User(it.uid, it.email) })
+            }
+
+            Firebase.auth.addAuthStateListener(listener)
+            // remove listener se o app for fechado
+            awaitClose { Firebase.auth.removeAuthStateListener(listener) }
         }
 
     override val currentUserId: String
         get() = Firebase.auth.currentUser?.uid.orEmpty()
 
     override fun hasUser(): Boolean {
-        return false
+        return Firebase.auth.currentUser != null
     }
 
     override suspend fun logIn(email: String, password: String): Result<Unit> {
         return try {
             Firebase.auth.signInWithEmailAndPassword(email, password).await()
-            Result.success<Unit>(Unit)
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -42,7 +50,7 @@ class AccountServiceImpl @Inject constructor() : AccountService {
     }
 
     override suspend fun logOut() {
-        TODO("Not yet implemented")
+        Firebase.auth.signOut()
     }
 
     override suspend fun deleteAccount() {
