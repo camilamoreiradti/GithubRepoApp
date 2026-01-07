@@ -77,7 +77,10 @@ class LoginViewModel @Inject constructor(
                 else -> {
                     loginUseCase(currentState.data.email, currentState.data.password)
                         .fold(
-                            onSuccess = { _uiEvent.send(UiEvent.Navigate(ListRoute)) },
+                            onSuccess = { user ->
+
+                                _uiEvent.send(UiEvent.Navigate(ListRoute))
+                            },
                             onFailure = { message = it.message.toString() }
                         )
                 }
