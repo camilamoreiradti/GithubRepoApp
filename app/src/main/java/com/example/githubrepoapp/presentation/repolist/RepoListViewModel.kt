@@ -48,10 +48,4 @@ class RepoListViewModel @Inject constructor(
             )
         }
     }
-
-    fun onLogoutClick() {
-        viewModelScope.launch(Dispatchers.IO) {
-            logoutUseCase()
-        }
-    }
 }

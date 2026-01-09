@@ -20,16 +20,16 @@ class UserPreferencesDataStore(
 
     // salvar dados
     suspend fun saveUser(
-        userId: String, userEmail: String
+        userId: String, userEmail: String?
     ) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.USER_ID] = userId
-            preferences[PreferencesKeys.USER_EMAIL] = userEmail
+            preferences[PreferencesKeys.USER_EMAIL] = userEmail ?: ""
         }
     }
 
     // ler dados com flow
-    val userFlow: Flow<UserPreferences?> = context.dataStore.data
+    val userFlow: Flow<UserPreferences> = context.dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -41,8 +41,8 @@ class UserPreferencesDataStore(
             // insert condição se estiver logado, else retorna null
 
             UserPreferences(
-                userId = preferences[PreferencesKeys.USER_ID] ?: "",
-                userEmail = preferences[PreferencesKeys.USER_EMAIL] ?: ""
+                userId = preferences[PreferencesKeys.USER_ID] ?: "No ID found",
+                userEmail = preferences[PreferencesKeys.USER_EMAIL] ?: "No email found"
             )
         }
 

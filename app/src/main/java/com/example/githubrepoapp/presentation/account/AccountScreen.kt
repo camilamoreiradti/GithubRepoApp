@@ -14,18 +14,48 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.githubrepoapp.data.local.datastore.UserPreferences
 import com.example.githubrepoapp.domain.local.model.UserLocal
-import com.example.githubrepoapp.presentation.components.InfoSection
+import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.components.GithubAppTopBar
+import com.example.githubrepoapp.presentation.components.InfoSection
+import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
-fun AccountScreen() {
+fun AccountScreen(
+    toLogIn: () -> Unit,
+    navigateBack: () -> Unit
+) {
+
+    val viewModel: AccountViewModel = hiltViewModel()
+
+    val state by viewModel.stateFlow.collectAsState()
+
+    when (state) {
+        is State.Error -> {}
+
+        is State.Loading -> {
+            LoadingIndicator()
+        }
+
+        is State.Success<*> -> {
+            AccountContent(
+                user = (state as State.Success).data,
+                onLogout = { viewModel.onLogoutClick(toLogIn) },
+                navigateBack = navigateBack,
+            )
+        }
+    }
+
 
 }
 
