@@ -4,6 +4,7 @@ import com.example.githubrepoapp.domain.remote.auth.model.User
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -31,19 +32,19 @@ class AccountServiceImpl @Inject constructor() : AccountService {
         return Firebase.auth.currentUser != null
     }
 
-    override suspend fun logIn(email: String, password: String): Result<Unit> {
+    override suspend fun logIn(email: String, password: String): Result<FirebaseUser?> {
         return try {
-            Firebase.auth.signInWithEmailAndPassword(email, password).await()
-            Result.success(Unit)
+            val result = Firebase.auth.signInWithEmailAndPassword(email, password).await()
+            Result.success(result.user)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun signUp(email: String, password: String): Result<Unit> {
+    override suspend fun signUp(email: String, password: String): Result<FirebaseUser?> {
         return try {
-            Firebase.auth.createUserWithEmailAndPassword(email, password).await()
-            Result.success(Unit)
+            val result = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+            Result.success(result.user)
         } catch (e: Exception) {
             Result.failure(e)
         }

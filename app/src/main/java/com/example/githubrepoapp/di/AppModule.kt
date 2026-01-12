@@ -1,7 +1,9 @@
 package com.example.githubrepoapp.di
 
+import com.example.githubrepoapp.data.local.source.UserLocalRepositoryImpl
 import com.example.githubrepoapp.data.remote.auth.service.AccountServiceImpl
 import com.example.githubrepoapp.data.remote.github.repository.GithubRemoteRepositoryImpl
+import com.example.githubrepoapp.domain.local.repository.UserLocalRepository
 import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import com.example.githubrepoapp.domain.remote.repositories.repository.GithubRemoteRepository
 import dagger.Binds
@@ -25,4 +27,9 @@ abstract class AppModule {
     abstract fun bindsAccountServiceImpl(
         accountServiceImpl: AccountServiceImpl
     ): AccountService
+
+    @Binds
+    abstract fun bindsUserLocalRepositoryImpl(
+        userLocalRepositoryImpl: UserLocalRepositoryImpl
+    ): UserLocalRepository
 }
