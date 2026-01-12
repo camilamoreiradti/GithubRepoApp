@@ -26,8 +26,9 @@ data class RepoItemRoute(val ownerName: String, val repoName: String)
 
 @Composable
 fun MainNavHost(
-    toSignIn: () -> Unit,
-    splashViewModel: SplashViewModel
+    toAccount: () -> Unit,
+    toLogIn: () -> Unit,
+    splashViewModel: SplashViewModel,
 ) {
     val navController = rememberNavController()
     val authState by splashViewModel.authState.collectAsState()
@@ -42,7 +43,7 @@ fun MainNavHost(
             }
 
             is AuthState.Unauthenticated -> {
-                toSignIn()
+                toLogIn()
             }
 
             else -> {}
@@ -56,7 +57,8 @@ fun MainNavHost(
 
         composable<ListRoute> {
             RepoListScreen(
-                toSignIn = toSignIn,
+                toAccount = toAccount,
+                toSignIn = toLogIn,
                 onNavigateToRepoItem = { ownerName, repoName ->
                     navController.navigate(
                         RepoItemRoute(

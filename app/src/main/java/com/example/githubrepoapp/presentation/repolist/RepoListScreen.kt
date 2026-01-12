@@ -1,13 +1,14 @@
 package com.example.githubrepoapp.presentation.repolist
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,12 +21,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.domain.remote.repositories.model.repo1
 import com.example.githubrepoapp.domain.remote.repositories.model.repo2
@@ -38,6 +37,7 @@ import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 @Composable
 fun RepoListScreen(
     toSignIn: () -> Unit,
+    toAccount: () -> Unit,
     onNavigateToRepoItem: (ownerName: String, repoName: String) -> Unit,
 ) {
 
@@ -59,7 +59,7 @@ fun RepoListScreen(
 
         is State.Success<*> -> {
             RepoListContent(
-                onLogout = { viewModel.onLogoutClick() },
+                toAccount = toAccount,
                 repos = state.data as List<RepoItem>,
                 onNavigateToRepoItem = onNavigateToRepoItem,
             )
@@ -70,20 +70,12 @@ fun RepoListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepoListContent(
-    onLogout: () -> Unit,
+    toAccount: () -> Unit,
     repos: List<RepoItem>,
     onNavigateToRepoItem: (ownerName: String, repoName: String) -> Unit
 ) {
     Scaffold(
         topBar = {
-
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .consumeWindowInsets(paddingValues)
-                .padding(16.dp)
-        ) {
             TopAppBar(
                 title = {
                     Text(
@@ -92,19 +84,26 @@ fun RepoListContent(
                 },
                 actions = {
                     IconButton(
-                        onClick = onLogout,
+                        onClick = toAccount,
                     ) {
                         Icon(
-                            Icons.AutoMirrored.Filled.Logout,
-                            contentDescription = "ícone sair do app",
-                            Modifier
-                                .clip(CircleShape)
-                                .padding(8.dp),
+                            Icons.Filled.AccountCircle,
+                            contentDescription = "account icon",
+                            modifier = Modifier.size(36.dp)
                         )
                     }
                 },
-                modifier = Modifier.padding(0.dp)
+                windowInsets = WindowInsets(left = 0.dp, right = 0.dp),
             )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .consumeWindowInsets(paddingValues)
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
+
 
             Text(
                 text = "Repositories",
@@ -150,8 +149,8 @@ fun previewListScreen() {
                 repo1,
                 repo3,
             ),
+            toAccount = { },
             onNavigateToRepoItem = { _: String, _: String -> },
-            onLogout = { }
         )
     }
 }

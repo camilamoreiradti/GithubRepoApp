@@ -3,13 +3,11 @@ package com.example.githubrepoapp.presentation.repolist
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import com.example.githubrepoapp.domain.remote.auth.usecase.AuthState
-import com.example.githubrepoapp.domain.remote.auth.usecase.LogoutUseCase
 import com.example.githubrepoapp.domain.remote.auth.usecase.MonitorAuthenticationUseCase
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
-import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.domain.remote.repositories.usecase.GetRepoListUseCase
+import com.example.githubrepoapp.presentation.baseviewmodel.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +20,6 @@ import javax.inject.Inject
 class RepoListViewModel @Inject constructor(
     private val getRepoListUseCase: GetRepoListUseCase,
     private val monitorAuthenticationUseCase: MonitorAuthenticationUseCase,
-    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<State<List<RepoItem>>>(State.Loading)
@@ -46,12 +43,6 @@ class RepoListViewModel @Inject constructor(
                 },
                 onFailure = { Log.d("Exception", it.message.toString()) }
             )
-        }
-    }
-
-    fun onLogoutClick() {
-        viewModelScope.launch(Dispatchers.IO) {
-            logoutUseCase()
         }
     }
 }

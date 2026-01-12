@@ -1,9 +1,12 @@
 package com.example.githubrepoapp.di
 
+import android.content.Context
+import com.example.githubrepoapp.data.local.datastore.UserPreferencesDataStore
 import com.example.githubrepoapp.data.remote.github.service.GithubService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 
@@ -20,5 +23,10 @@ class DataModule {
         retrofit: Retrofit
     ): GithubService {
         return retrofit.create(GithubService::class.java)
+    }
+
+    @Provides
+    fun providesUserPreferencesDataStore(@ApplicationContext context: Context): UserPreferencesDataStore {
+        return UserPreferencesDataStore(context)
     }
 }
