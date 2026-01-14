@@ -1,6 +1,5 @@
 package com.example.githubrepoapp.di
 
-import android.content.Context
 import com.example.githubrepoapp.analytics.AnalyticsManager
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -8,7 +7,6 @@ import com.google.firebase.analytics.analytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
