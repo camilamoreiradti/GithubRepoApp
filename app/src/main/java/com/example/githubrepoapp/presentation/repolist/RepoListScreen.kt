@@ -25,13 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.domain.remote.repositories.model.repo1
 import com.example.githubrepoapp.domain.remote.repositories.model.repo2
 import com.example.githubrepoapp.domain.remote.repositories.model.repo3
 import com.example.githubrepoapp.presentation.baseviewmodel.State
+import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.presentation.components.RepoListItem
+import com.example.githubrepoapp.presentation.navigation.ListRoute
+import com.example.githubrepoapp.presentation.navigation.RepoItemRoute
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
@@ -40,7 +44,6 @@ fun RepoListScreen(
     toAccount: () -> Unit,
     onNavigateToRepoItem: (ownerName: String, repoName: String) -> Unit,
 ) {
-
     val viewModel: RepoListViewModel = hiltViewModel()
 
     val uiState by viewModel.stateFlow.collectAsState()
@@ -61,7 +64,10 @@ fun RepoListScreen(
             RepoListContent(
                 toAccount = toAccount,
                 repos = state.data as List<RepoItem>,
-                onNavigateToRepoItem = onNavigateToRepoItem,
+                onNavigateToRepoItem = { repoItem ->
+                    onNavigateToRepoItem(repoItem.owner.name, repoItem.name)
+                    viewModel.onItemClick(repoItem)
+                },
             )
         }
     }
@@ -72,7 +78,7 @@ fun RepoListScreen(
 fun RepoListContent(
     toAccount: () -> Unit,
     repos: List<RepoItem>,
-    onNavigateToRepoItem: (ownerName: String, repoName: String) -> Unit
+    onNavigateToRepoItem: (repoItem: RepoItem) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -117,9 +123,7 @@ fun RepoListContent(
                     RepoListItem(
                         repo = item,
                         onItemClicked = {
-                            onNavigateToRepoItem(
-                                item.owner.name, item.name
-                            )
+                            onNavigateToRepoItem(item)
                         }
                     )
                 }
@@ -150,7 +154,7 @@ fun previewListScreen() {
                 repo3,
             ),
             toAccount = { },
-            onNavigateToRepoItem = { _: String, _: String -> },
+            onNavigateToRepoItem = { },
         )
     }
 }
