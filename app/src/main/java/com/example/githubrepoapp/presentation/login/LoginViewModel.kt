@@ -9,6 +9,7 @@ import com.example.githubrepoapp.presentation.AuthFormEvent
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.navigation.ListRoute
+import com.example.githubrepoapp.utils.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -76,6 +77,10 @@ class LoginViewModel @Inject constructor(
             when {
                 email.isBlank() || password.isBlank() -> {
                     message = "Email and password cannot be empty"
+                }
+
+                !email.isValidEmail() -> {
+                    message = "Please insert a valid email"
                 }
 
                 else -> {

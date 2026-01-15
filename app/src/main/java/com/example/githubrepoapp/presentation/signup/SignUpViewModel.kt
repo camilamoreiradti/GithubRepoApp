@@ -2,12 +2,13 @@ package com.example.githubrepoapp.presentation.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubrepoapp.domain.remote.auth.service.AccountService
 import com.example.githubrepoapp.domain.remote.auth.usecase.SignUpUseCase
 import com.example.githubrepoapp.presentation.AuthFormEvent
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.navigation.ListRoute
+import com.example.githubrepoapp.utils.isValidEmail
+import com.example.githubrepoapp.utils.isValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -65,16 +66,21 @@ class SignUpViewModel @Inject constructor(
     fun onSignUpClick() {
         viewModelScope.launch(Dispatchers.IO) {
             val currentState = _stateFlow.value as State.Success<User>
+            val email = currentState.data.email
             val password = currentState.data.password
 
             var message: String? = null
 
             when {
+                !email.isValidEmail() -> {
+                    message = "Please insert a valid email"
+                }
+
                 password != currentState.data.confirmPassword -> {
                     message = "Passwords don't match"
                 }
 
-                password.length < 6 -> {
+                !password.isValidPassword() -> {
                     message = "Password must be at least 6 characters"
                 }
 
