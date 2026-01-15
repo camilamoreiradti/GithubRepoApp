@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -129,7 +128,7 @@ fun RepoListContent(
 
 @Preview
 @Composable
-fun previewListScreen() {
+fun PreviewListScreen() {
     GithubRepoAppTheme {
         RepoListContent(
             repos = listOf(
