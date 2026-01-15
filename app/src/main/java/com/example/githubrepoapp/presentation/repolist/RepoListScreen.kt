@@ -25,17 +25,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.domain.remote.repositories.model.repo1
 import com.example.githubrepoapp.domain.remote.repositories.model.repo2
 import com.example.githubrepoapp.domain.remote.repositories.model.repo3
 import com.example.githubrepoapp.presentation.baseviewmodel.State
-import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.components.LoadingIndicator
 import com.example.githubrepoapp.presentation.components.RepoListItem
-import com.example.githubrepoapp.presentation.navigation.ListRoute
-import com.example.githubrepoapp.presentation.navigation.RepoItemRoute
 import com.example.githubrepoapp.ui.theme.GithubRepoAppTheme
 
 @Composable
@@ -109,8 +105,6 @@ fun RepoListContent(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-
-
             Text(
                 text = "Repositories",
                 style = MaterialTheme.typography.headlineMedium,
@@ -134,7 +128,7 @@ fun RepoListContent(
 
 @Preview
 @Composable
-fun previewListScreen() {
+fun PreviewListScreen() {
     GithubRepoAppTheme {
         RepoListContent(
             repos = listOf(
