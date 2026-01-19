@@ -61,8 +61,8 @@ fun RepoListScreen(
                 toAccount = toAccount,
                 repos = state.data as List<RepoItem>,
                 onNavigateToRepoItem = { repoItem ->
-                    onNavigateToRepoItem(repoItem.owner.name, repoItem.name)
                     viewModel.onItemClick(repoItem)
+                    onNavigateToRepoItem(repoItem.owner.name, repoItem.name)
                 },
             )
         }
