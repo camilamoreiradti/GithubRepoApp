@@ -1,24 +1,25 @@
-package com.example.githubrepoapp.analytics
+package com.example.githubrepoapp.analytics.firebase
 
 import android.os.Bundle
+import com.example.githubrepoapp.analytics.AnalyticsService
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import javax.inject.Inject
 
-class AnalyticsManager @Inject constructor(
+class FirebaseAnalyticsService @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
-) {
-    fun logRepoItemClick(repoItem: RepoItem) {
+) : AnalyticsService {
+    override fun logRepoItemClick(log: Map<String, String>) {
         val bundle = Bundle().apply {
-            putString(FirebaseAnalytics.Param.ITEM_NAME, repoItem.name)
-            putString("item_owner", repoItem.owner.name)
+            log.forEach { (key, value) ->
+                putString(key, value)
+            }
         }
-
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
     }
 
-    fun logButtonClick(buttonName: String) {
+    override fun logButtonClick(buttonName: String) {
         firebaseAnalytics.logEvent("button_click") {
             param("button_name", buttonName)
         }

@@ -3,14 +3,14 @@ package com.example.githubrepoapp.presentation.repolist
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubrepoapp.analytics.AnalyticsManager
+import com.example.githubrepoapp.analytics.AnalyticsService
+import com.example.githubrepoapp.analytics.firebase.FirebaseAnalyticsService
 import com.example.githubrepoapp.domain.remote.auth.usecase.AuthState
 import com.example.githubrepoapp.domain.remote.auth.usecase.MonitorAuthenticationUseCase
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.domain.remote.repositories.usecase.GetRepoListUseCase
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
-import com.example.githubrepoapp.presentation.navigation.RepoItemRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -25,7 +25,7 @@ import javax.inject.Inject
 class RepoListViewModel @Inject constructor(
     private val getRepoListUseCase: GetRepoListUseCase,
     private val monitorAuthenticationUseCase: MonitorAuthenticationUseCase,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<State<List<RepoItem>>>(State.Loading)
@@ -57,7 +57,8 @@ class RepoListViewModel @Inject constructor(
 
     fun onItemClick(repoItem: RepoItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            analyticsManager.logRepoItemClick(repoItem)
+            val log = mapOf("item_name" to repoItem.name, "item_owner" to repoItem.owner.name)
+            analyticsService.logRepoItemClick(log)
         }
     }
 }

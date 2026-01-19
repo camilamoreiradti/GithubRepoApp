@@ -1,6 +1,6 @@
 package com.example.githubrepoapp.di
 
-import com.example.githubrepoapp.analytics.AnalyticsManager
+import com.example.githubrepoapp.analytics.firebase.FirebaseAnalyticsService
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -19,9 +19,9 @@ class AnalyticsModule {
     }
 
     @Provides
-    fun providesAnalyticsManager(
+    fun providesFirebaseAnalyticsService(
         firebaseAnalytics: FirebaseAnalytics
-    ): AnalyticsManager {
-        return AnalyticsManager(firebaseAnalytics)
+    ): FirebaseAnalyticsService {
+        return FirebaseAnalyticsService(firebaseAnalytics)
     }
 }
