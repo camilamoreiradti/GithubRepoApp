@@ -2,7 +2,8 @@ package com.example.githubrepoapp.analytics.firebase
 
 import android.os.Bundle
 import com.example.githubrepoapp.analytics.AnalyticsService
-import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
+import com.example.githubrepoapp.analytics.LogEvent
+import com.example.githubrepoapp.analytics.LogParamName
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import javax.inject.Inject
@@ -16,12 +17,12 @@ class FirebaseAnalyticsService @Inject constructor(
                 putString(key, value)
             }
         }
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+        firebaseAnalytics.logEvent(LogEvent.REPO_ITEM_CLICK.toString(), bundle)
     }
 
     override fun logButtonClick(buttonName: String) {
-        firebaseAnalytics.logEvent("button_click") {
-            param("button_name", buttonName)
+        firebaseAnalytics.logEvent(LogEvent.BUTTON_CLICK.toString()) {
+            param(LogParamName.BUTTON_NAME.toString(), buttonName)
         }
     }
 }

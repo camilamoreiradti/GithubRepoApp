@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.analytics.AnalyticsService
+import com.example.githubrepoapp.analytics.LogParamName
 import com.example.githubrepoapp.analytics.firebase.FirebaseAnalyticsService
 import com.example.githubrepoapp.domain.remote.auth.usecase.AuthState
 import com.example.githubrepoapp.domain.remote.auth.usecase.MonitorAuthenticationUseCase
@@ -57,7 +58,10 @@ class RepoListViewModel @Inject constructor(
 
     fun onItemClick(repoItem: RepoItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            val log = mapOf("item_name" to repoItem.name, "item_owner" to repoItem.owner.name)
+            val log: Map<String, String> = mapOf(
+                LogParamName.REPO_ITEM_NAME.toString() to repoItem.name,
+                LogParamName.REPO_ITEM_OWNER.toString() to repoItem.owner.name
+            )
             analyticsService.logRepoItemClick(log)
         }
     }

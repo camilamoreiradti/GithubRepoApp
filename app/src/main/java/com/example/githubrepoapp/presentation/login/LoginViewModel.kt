@@ -3,7 +3,7 @@ package com.example.githubrepoapp.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.analytics.AnalyticsService
-import com.example.githubrepoapp.analytics.firebase.FirebaseAnalyticsService
+import com.example.githubrepoapp.analytics.LogParamValue
 import com.example.githubrepoapp.domain.local.usecase.SaveUserUseCase
 import com.example.githubrepoapp.domain.remote.auth.usecase.LoginUseCase
 import com.example.githubrepoapp.presentation.AuthFormEvent
@@ -99,7 +99,7 @@ class LoginViewModel @Inject constructor(
             }
             message?.let { _uiEvent.send(UiEvent.ShowSnackbar(it)) }
 
-            analyticsService.logButtonClick("login")
+            analyticsService.logButtonClick(LogParamValue.LOGIN_BUTTON.toString())
         }
     }
 }
