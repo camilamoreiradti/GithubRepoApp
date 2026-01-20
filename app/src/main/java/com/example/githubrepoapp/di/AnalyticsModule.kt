@@ -1,6 +1,9 @@
 package com.example.githubrepoapp.di
 
+import com.example.githubrepoapp.BuildConfig
+import com.example.githubrepoapp.analytics.AnalyticsService
 import com.example.githubrepoapp.analytics.firebase.FirebaseAnalyticsService
+import com.example.githubrepoapp.analytics.local.LocalAnalytics
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -19,9 +22,13 @@ class AnalyticsModule {
     }
 
     @Provides
-    fun providesFirebaseAnalyticsService(
+    fun providesAnalyticsService(
         firebaseAnalytics: FirebaseAnalytics
-    ): FirebaseAnalyticsService {
-        return FirebaseAnalyticsService(firebaseAnalytics)
+    ): AnalyticsService {
+        return if (BuildConfig.LOCAL_ANALYTICS) {
+            LocalAnalytics()
+        } else {
+            FirebaseAnalyticsService(firebaseAnalytics)
+        }
     }
 }

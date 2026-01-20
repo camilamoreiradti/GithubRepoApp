@@ -1,8 +1,5 @@
 package com.example.githubrepoapp.di
 
-import com.example.githubrepoapp.analytics.AnalyticsService
-import com.example.githubrepoapp.analytics.firebase.FirebaseAnalyticsService
-import com.example.githubrepoapp.analytics.local.LocalAnalytics
 import com.example.githubrepoapp.data.local.source.UserLocalRepositoryImpl
 import com.example.githubrepoapp.data.remote.auth.service.AccountServiceImpl
 import com.example.githubrepoapp.data.remote.github.repository.GithubRemoteRepositoryImpl
@@ -35,14 +32,4 @@ abstract class AppModule {
     abstract fun bindsUserLocalRepositoryImpl(
         userLocalRepositoryImpl: UserLocalRepositoryImpl
     ): UserLocalRepository
-
-    @Binds
-    abstract fun bindsFirebaseAnalyticsService(
-        firebaseAnalyticsService: FirebaseAnalyticsService
-    ):  AnalyticsService
-
-//    @Binds
-//    abstract fun bindsLocalAnalyticsService(
-//        localAnalytics: LocalAnalytics
-//    ):  AnalyticsService
 }
