@@ -26,10 +26,15 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            buildConfigField("boolean", "LOCAL_ANALYTICS", "false")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            isDebuggable = true
+            buildConfigField("boolean", "LOCAL_ANALYTICS", "true")
         }
     }
     compileOptions {
