@@ -1,5 +1,6 @@
 package com.example.githubrepoapp.domain.usecase
 
+import com.example.githubrepoapp.crashlytics.firebase.FirebaseCrashlyticsService
 import com.example.githubrepoapp.domain.remote.repositories.model.Owner
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.domain.remote.repositories.repository.GithubRemoteRepository
@@ -24,6 +25,7 @@ import kotlin.test.assertTrue
 class GetRepoListUseCaseTest {
 
     private lateinit var repository: GithubRemoteRepository
+    private lateinit var firebaseCrashlyticsService: FirebaseCrashlyticsService
     private lateinit var useCase: GetRepoListUseCase
 
 
@@ -31,7 +33,8 @@ class GetRepoListUseCaseTest {
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
         repository = mockk<GithubRemoteRepository>()
-        useCase = GetRepoListUseCase(repository)
+        firebaseCrashlyticsService = mockk<FirebaseCrashlyticsService>()
+        useCase = GetRepoListUseCase(repository, firebaseCrashlyticsService)
     }
 
     @After

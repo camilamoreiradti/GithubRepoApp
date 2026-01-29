@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.analytics.AnalyticsService
 import com.example.githubrepoapp.analytics.LogParamValue
+import com.example.githubrepoapp.di.IoDispatcher
 import com.example.githubrepoapp.domain.local.usecase.SaveUserUseCase
 import com.example.githubrepoapp.domain.remote.auth.usecase.LoginUseCase
 import com.example.githubrepoapp.presentation.AuthFormEvent
@@ -12,6 +13,7 @@ import com.example.githubrepoapp.presentation.baseviewmodel.UiEvent
 import com.example.githubrepoapp.presentation.navigation.ListRoute
 import com.example.githubrepoapp.utils.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val saveUserUseCase: SaveUserUseCase,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<State<User>>(State.Loading)
@@ -68,8 +71,8 @@ class LoginViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     fun onLoginClick() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val currentState = _stateFlow.value as State.Success<User>
+        viewModelScope.launch(ioDispatcher) {
+            val currentState = stateFlow.value as State.Success<User>
             val email = currentState.data.email
             val password = currentState.data.password
 
