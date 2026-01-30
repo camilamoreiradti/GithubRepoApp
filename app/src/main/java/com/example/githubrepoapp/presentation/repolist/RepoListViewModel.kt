@@ -40,9 +40,6 @@ class RepoListViewModel @Inject constructor(
         }
     }
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
-
     fun getRepoList() {
         viewModelScope.launch(Dispatchers.IO) {
             getRepoListUseCase().fold(
