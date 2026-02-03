@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
@@ -39,12 +40,13 @@ class RepoListViewModelTest {
     private val getRepoListUseCase = mockk<GetRepoListUseCase>()
     private val monitorAuthenticationUseCase = mockk<MonitorAuthenticationUseCase>()
     private val analyticsService = mockk<AnalyticsService>()
+    private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: RepoListViewModel
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher())
-        viewModel = RepoListViewModel(getRepoListUseCase, monitorAuthenticationUseCase, analyticsService)
+        Dispatchers.setMain(testDispatcher)
+        viewModel = RepoListViewModel(getRepoListUseCase, monitorAuthenticationUseCase, analyticsService, testDispatcher)
     }
 
     @After
@@ -76,7 +78,6 @@ class RepoListViewModelTest {
             coEvery { getRepoListUseCase() } returns Result.success(list)
 
             spy.getRepoList()
-            runCurrent()
             advanceUntilIdle()
 
             assertEquals(State.Success(list), spy.stateFlow.value)

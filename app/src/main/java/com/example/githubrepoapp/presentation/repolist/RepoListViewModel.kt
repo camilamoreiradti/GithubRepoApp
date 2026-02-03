@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoapp.analytics.AnalyticsService
 import com.example.githubrepoapp.analytics.LogParamName
+import com.example.githubrepoapp.di.IoDispatcher
 import com.example.githubrepoapp.domain.remote.auth.usecase.AuthState
 import com.example.githubrepoapp.domain.remote.auth.usecase.MonitorAuthenticationUseCase
 import com.example.githubrepoapp.domain.remote.repositories.model.RepoItem
 import com.example.githubrepoapp.domain.remote.repositories.usecase.GetRepoListUseCase
 import com.example.githubrepoapp.presentation.baseviewmodel.State
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class RepoListViewModel @Inject constructor(
     private val getRepoListUseCase: GetRepoListUseCase,
     private val monitorAuthenticationUseCase: MonitorAuthenticationUseCase,
-    private val analyticsService: AnalyticsService
+    private val analyticsService: AnalyticsService,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _stateFlow = MutableStateFlow<State<List<RepoItem>>>(State.Loading)
@@ -37,7 +40,7 @@ class RepoListViewModel @Inject constructor(
     }
 
     fun getRepoList() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             getRepoListUseCase().fold(
                 onSuccess = { list ->
                     _stateFlow.update { _ ->
